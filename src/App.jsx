@@ -67,31 +67,23 @@ function App() {
 
     try {
       // Test the API key with a minimal request
-      const testResponse = await fetch(
-        "https://api.anthropic.com/v1/messages",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": trimmedKey,
-            "anthropic-version": "2023-06-01",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-            "Access-Control-Allow-Headers":
-              "Content-Type, x-api-key, anthropic-version",
-          },
-          body: JSON.stringify({
-            model: "claude-sonnet-4-20250514",
-            max_tokens: 10,
-            messages: [
-              {
-                role: "user",
-                content: "Hi",
-              },
-            ],
-          }),
-        }
-      );
+      const testResponse = await fetch("/.netlify/functions/anthropic-proxy", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": trimmedKey,
+        },
+        body: JSON.stringify({
+          model: "claude-3-5-sonnet-20241022",
+          max_tokens: 10,
+          messages: [
+            {
+              role: "user",
+              content: "Hi",
+            },
+          ],
+        }),
+      });
 
       if (testResponse.ok) {
         localStorage.setItem("anthropic_api_key", trimmedKey);
@@ -167,19 +159,14 @@ function App() {
         reader.readAsDataURL(file);
       });
 
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
+      const response = await fetch("/.netlify/functions/anthropic-proxy", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "x-api-key": apiKey,
-          "anthropic-version": "2023-06-01",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-          "Access-Control-Allow-Headers":
-            "Content-Type, x-api-key, anthropic-version",
         },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
+          model: "claude-3-5-sonnet-20241022",
           max_tokens: 4000,
           messages: [
             {
@@ -279,20 +266,15 @@ DO NOT include any text outside the JSON. Be thorough and identify every visible
       for (const item of itemsToProcess) {
         try {
           const priceResponse = await fetch(
-            "https://api.anthropic.com/v1/messages",
+            "/.netlify/functions/anthropic-proxy",
             {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
                 "x-api-key": apiKey,
-                "anthropic-version": "2023-06-01",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                "Access-Control-Allow-Headers":
-                  "Content-Type, x-api-key, anthropic-version",
               },
               body: JSON.stringify({
-                model: "claude-sonnet-4-20250514",
+                model: "claude-3-5-sonnet-20241022",
                 max_tokens: 500,
                 messages: [
                   {
